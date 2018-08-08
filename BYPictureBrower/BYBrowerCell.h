@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+@class BYAsset;
+
 @interface BYBrowerCell : UICollectionViewCell
 
-- (void)bindImage:(UIImage *)image;
+- (void)bindAsset:(BYAsset *)asset;
 @end

@@ -8,6 +8,8 @@
 
 #import "BYBrowerView.h"
 #import "BYAsset.h"
+#import "BYBrowerCell.h"
+#import <YYKit/YYKit.h>
 
 @interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -31,11 +33,19 @@
 - (void)initSubviews {
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
   layout.itemSize = CGSizeMake([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height);
+  layout.minimumLineSpacing = 0;
+  layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
   self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+  if (@available(iOS 11.0, *)) {
+    self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+  }
   self.collectionView.scrollsToTop = NO;
   self.collectionView.showsVerticalScrollIndicator = NO;
   self.collectionView.showsHorizontalScrollIndicator = NO;
   self.collectionView.pagingEnabled = YES;
+  self.collectionView.delegate = self;
+  self.collectionView.dataSource = self;
+  [self.collectionView registerClass:[BYBrowerCell class] forCellWithReuseIdentifier:@"BYBrowerCell"];
   [self addSubview:self.collectionView];
   // "1/6"
   
@@ -44,26 +54,32 @@
   //下面的点点点
 }
 
+- (void)layoutSubviews {
+  [super layoutSubviews];
+  self.collectionView.frame = CGRectMake(0, 0, self.bounds.size.width + 20, self.bounds.size.height);
+}
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
   return self.assetArray.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-  return nil;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+  return CGSizeMake(kScreenWidth + 20, kScreenHeight);
 }
 
-- (void)setImageArray:(NSArray<NSString *> *)imageArray {
-  NSMutableArray *array = [NSMutableArray arrayWithCapacity:imageArray.count];
-  [imageArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-    
-  }];
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+  BYBrowerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"BYBrowerCell" forIndexPath:indexPath];
+  BYAsset *asset = self.assetArray[indexPath.row];
+  [cell bindAsset:asset];
+  return cell;
 }
+
 
 - (void)show {
   UIWindow *window = [UIApplication sharedApplication].keyWindow;
   self.frame = window.bounds;
   [window addSubview:self];
-  
+  [self.collectionView reloadData];
 //  CGRect rect = [self.baseView convertRect:self.baseView.bounds toView:window.maskView];
 //
 //  UIImageView *imageView = (UIImageView *)self.baseView;

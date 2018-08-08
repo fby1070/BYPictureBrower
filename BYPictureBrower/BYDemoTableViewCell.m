@@ -7,16 +7,15 @@
 //
 
 #import "BYDemoTableViewCell.h"
-#import "UIButton+YYWebImage.h"
-#import "UIColor+YYAdd.h"
-#import "UIImage+YYAdd.h"
 #import <YYKit/YYKit.h>
 #import "BYBrowerView.h"
+#import "BYAsset.h"
 
 @interface BYDemoTableViewCell()
 
 @property (nonatomic, strong) UIImageView *photoView;
-@property (nonatomic, strong) NSArray *imageArray;
+@property (nonatomic, strong) NSArray<NSString *> *imageUrlArray;
+@property (nonatomic, strong) NSArray<UIImageView *> *imageViewArray;
 @end
 
 @implementation BYDemoTableViewCell
@@ -29,37 +28,61 @@
 }
 
 - (void)initSubviews {
-  self.photoView = [[UIImageView alloc] init];
-  self.photoView.userInteractionEnabled = YES;
-  self.photoView.frame = CGRectMake(100, 10, 60, 60);
-  [self.photoView setImageWithURL:[NSURL URLWithString:@"http://ww2.sinaimg.cn/thumbnail/904c2a35jw1emu3ec7kf8j20c10epjsn.jpg"] options:YYWebImageOptionSetImageWithFadeAnimation];
-  [self.contentView addSubview:self.photoView];
-  UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doTapChange:)];
-  [self.photoView addGestureRecognizer:tap];
-  
-  self.label = [[UILabel alloc] init];
-  self.label.frame = CGRectMake(80, 40, 60, 15);
-  [self.contentView addSubview:self.label];
+//  self.photoView = [[UIImageView alloc] init];
+//  self.photoView.userInteractionEnabled = YES;
+//  self.photoView.frame = CGRectMake(100, 10, 60, 60);
+//  [self.photoView setImageWithURL:[NSURL URLWithString:@"http://ww2.sinaimg.cn/thumbnail/904c2a35jw1emu3ec7kf8j20c10epjsn.jpg"] options:YYWebImageOptionSetImageWithFadeAnimation];
+//  [self.contentView addSubview:self.photoView];
+//  UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doTapChange:)];
+//  [self.photoView addGestureRecognizer:tap];
+//  
+//  self.label = [[UILabel alloc] init];
+//  self.label.frame = CGRectMake(80, 40, 60, 15);
+//  [self.contentView addSubview:self.label];
 }
 
 - (void) bindArray:(NSArray<NSString *> *)imageArray {
-  self.imageArray = imageArray;
+  self.imageUrlArray = imageArray;
   NSMutableArray *imageViewArray = [NSMutableArray arrayWithCapacity:imageArray.count];
   [imageArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
     UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.frame = CGRectMake(10 + idx * 70, 10, 60, 60);
+    CGFloat x = 10 + idx * 70;
+    CGFloat y = 10;
+    if (x > kScreenWidth) {
+      x = x - kScreenWidth;
+      
+      y += 70;
+    }
+    imageView.frame = CGRectMake(x, y, 60, 60);
     imageView.userInteractionEnabled = YES;
-    [imageView setImageWithURL:imageViewArray[idx] options:YYWebImageOptionSetImageWithFadeAnimation];
+    [imageView setImageWithURL:[NSURL URLWithString:obj] options:YYWebImageOptionSetImageWithFadeAnimation];
     [imageViewArray addObject:imageView];
     [self addSubview:imageView];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doTapChange:)];
     [imageView addGestureRecognizer:tap];
   }];
+  self.imageViewArray = [imageViewArray copy];
 }
 
 - (void)doTapChange:(UITapGestureRecognizer *)tapGestureRecognizer {
-  BYBrowerView *view = [[BYBrowerView alloc] initWithImageArray:self.imageArray];
-  view.imagesSuperView = self;
+  
+  NSMutableArray *assetArray = [NSMutableArray arrayWithCapacity:self.imageViewArray.count];
+  [self.imageViewArray enumerateObjectsUsingBlock:^(UIImageView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    BYAsset *asset = [[BYAsset alloc] init];
+    asset.defaultImageView = obj;//空间中处理
+    [assetArray addObject:asset];
+  }];
+  
+  [self.imageUrlArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    BYAsset *asset = assetArray[idx];
+    asset.imageUrl = obj;
+  }];
+  
+  BYBrowerView *view = [[BYBrowerView alloc] initWithAssetArray:[assetArray copy]];
+  
   [view show];
+//  BYBrowerView *view = [[BYBrowerView alloc] initWithImageArray:self.imageArray];
+//  view.imagesSuperView = self;
+//  [view show];
 }
 @end

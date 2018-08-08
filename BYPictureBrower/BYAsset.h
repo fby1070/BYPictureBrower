@@ -24,17 +24,17 @@
 /**
  图片链接(需要显示比默认图更清楚的图片URL)
  */
-@property(nonatomic, copy) NSString *newImageUrl;
+@property(nonatomic, copy) NSString *imageUrl;
 
 /**
  图片的宽
  */
-@property(nonatomic, assign) NSInteger width;
+@property(nonatomic, assign) CGFloat width;
 
 /**
  图片的高
  */
-@property(nonatomic, assign) NSInteger height;
+@property(nonatomic, assign) CGFloat height;
 
 /**
  原图节数

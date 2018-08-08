@@ -8,6 +8,7 @@
 
 #import "BYBrowerCell.h"
 #import <YYKit/YYKit.h>
+#import "BYAsset.h"
 
 @interface BYBrowerCell ()
 
@@ -28,11 +29,9 @@
   [self addSubview:self.pictureView];
 }
 
-- (void)bindImage:(UIImage *)image {
-  CGFloat h = (self.bounds.size.width / image.size.width) * image.size.height;
-  CGFloat y = (self.frame.size.height - h) / 2;
-  self.pictureView.frame = CGRectMake(0, y, self.bounds.size.width, h);
-//  self.pictureView setImageURL:<#(NSURL * _Nullable)#>
-  
+- (void)bindAsset:(BYAsset *)asset {
+  CGFloat y = (self.bounds.size.height - asset.height) / 2;
+  self.pictureView.frame = CGRectMake(0, y, asset.width, asset.height);
+  [self.pictureView setImageWithURL:[NSURL URLWithString:asset.imageUrl] placeholder:[UIImage imageWithColor:[UIColor redColor]]];
 }
 @end
