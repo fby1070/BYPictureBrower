@@ -1,0 +1,8 @@
+
+
+target 'BYPictureBrower' do
+  platform :ios, '9.0'
+  inhibit_all_warnings!
+  pod 'YYKit'
+
+end
