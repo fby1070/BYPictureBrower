@@ -18,7 +18,6 @@
 		8F5B76E1211ACFF4000B48AA /* BYBrowerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F5B76E0211ACFF4000B48AA /* BYBrowerView.m */; };
 		8F5B76E4211AF08C000B48AA /* BYBrowerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F5B76E3211AF08C000B48AA /* BYBrowerCell.m */; };
 		8F5B76E7211AF56C000B48AA /* BYAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F5B76E6211AF56C000B48AA /* BYAsset.m */; };
-		8F5B76EA211AF7AE000B48AA /* Picture.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F5B76E8211AF7AE000B48AA /* Picture.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +41,6 @@
 		8F5B76E3211AF08C000B48AA /* BYBrowerCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BYBrowerCell.m; sourceTree = "<group>"; };
 		8F5B76E5211AF56C000B48AA /* BYAsset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BYAsset.h; sourceTree = "<group>"; };
 		8F5B76E6211AF56C000B48AA /* BYAsset.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BYAsset.m; sourceTree = "<group>"; };
-		8F5B76E8211AF7AE000B48AA /* Picture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Picture.m; sourceTree = "<group>"; };
-		8F5B76E9211AF7AE000B48AA /* Picture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Picture.h; sourceTree = "<group>"; };
 		D62E05D65030BD3B8BF7544B /* Pods-BYPictureBrower.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BYPictureBrower.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BYPictureBrower/Pods-BYPictureBrower.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,8 +77,6 @@
 		8F5B76C5211A997C000B48AA /* BYPictureBrower */ = {
 			isa = PBXGroup;
 			children = (
-				8F5B76E9211AF7AE000B48AA /* Picture.h */,
-				8F5B76E8211AF7AE000B48AA /* Picture.m */,
 				8F5B76DC211A9F08000B48AA /* BYDemoTableViewCell.h */,
 				8F5B76DD211A9F08000B48AA /* BYDemoTableViewCell.m */,
 				8F5B76C6211A997C000B48AA /* AppDelegate.h */,
@@ -212,7 +207,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F5B76EA211AF7AE000B48AA /* Picture.m in Sources */,
 				8F5B76E1211ACFF4000B48AA /* BYBrowerView.m in Sources */,
 				8F5B76E7211AF56C000B48AA /* BYAsset.m in Sources */,
 				8F5B76CB211A997C000B48AA /* ViewController.m in Sources */,

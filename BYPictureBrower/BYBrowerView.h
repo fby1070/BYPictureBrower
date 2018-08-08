@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class BYAsset;
+
 @interface BYBrowerView : UIView
 
-//@property (nonatomic, strong) UIView *imagesSuperView;
+
 @property (nonatomic, assign) NSInteger index;
 
-- (instancetype)initWithImageArray:(NSArray *)imageArray imagesSuperView:(UIView *)imagesSuperView;
+- (instancetype)initWithAssetArray:(NSArray<BYAsset *> *)assetArray;
 - (void)show;
 @end

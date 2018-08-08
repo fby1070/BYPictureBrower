@@ -11,19 +11,16 @@
 
 @interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) NSArray<NSString *> *imageArray;
 @property (nonatomic, strong) NSArray<BYAsset *> *assetArray;
 @property (nonatomic, strong) UICollectionView *collectionView;
-@property (nonatomic, strong) UIView *imagesSuperView;
 @end
 
 @implementation BYBrowerView
 
-- (instancetype)initWithImageArray:(NSArray *)imageArray imagesSuperView:(UIView *)imagesSuperView {
+- (instancetype)initWithAssetArray:(NSArray<BYAsset *> *)assetArray {
   self = [super init];
   if (self) {
-    self.imagesSuperView = imagesSuperView;
-    self.imageArray = imageArray;
+    self.assetArray = assetArray;
     self.backgroundColor = [UIColor blackColor];
     self.alpha = 0;
     [self initSubviews];
@@ -48,7 +45,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-  return self.imageArray.count;
+  return self.assetArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {

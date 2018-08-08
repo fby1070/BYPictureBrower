@@ -11,25 +11,33 @@
 
 @interface BYAsset : NSObject
 
-@property(nonatomic, copy) UIImage *placeHolderImage;
-
 /**
- * 图片链接
+ 需要放大缩小动画
  */
-@property(nonatomic, copy) NSString *imageUrl;
+@property(nonatomic, strong) UIImageView *defaultImageView;
 
 /**
- * 图片的宽
+ 不需要动画
+ */
+@property(nonatomic, copy) UIImage *defaultImage;
+
+/**
+ 图片链接(需要显示比默认图更清楚的图片URL)
+ */
+@property(nonatomic, copy) NSString *newImageUrl;
+
+/**
+ 图片的宽
  */
 @property(nonatomic, assign) NSInteger width;
 
 /**
- * 图片的高
+ 图片的高
  */
 @property(nonatomic, assign) NSInteger height;
 
 /**
- * 原图节数
+ 原图节数
  */
 @property(nonatomic, copy) NSString *size;
 @end
