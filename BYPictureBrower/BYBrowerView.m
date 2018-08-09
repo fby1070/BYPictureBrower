@@ -11,7 +11,7 @@
 #import "BYBrowerCell.h"
 #import <YYKit/YYKit.h>
 
-@interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSArray<BYAsset *> *assetArray;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -47,6 +47,19 @@
   self.collectionView.dataSource = self;
   [self.collectionView registerClass:[BYBrowerCell class] forCellWithReuseIdentifier:@"BYBrowerCell"];
   [self addSubview:self.collectionView];
+  
+  UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+  singleTap.delegate = self;
+  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+  doubleTap.delegate = self;
+  doubleTap.numberOfTapsRequired = 2;
+  UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress)];
+  longPress.delegate = self;
+  [singleTap requireGestureRecognizerToFail: doubleTap];
+  [self addGestureRecognizer:singleTap];
+  [self addGestureRecognizer:doubleTap];
+  [self addGestureRecognizer:longPress];
+  
   // "1/6"
   
   //保存图片按钮
@@ -72,6 +85,16 @@
   BYAsset *asset = self.assetArray[indexPath.row];
   [cell bindAsset:asset];
   return cell;
+}
+
+- (void)dismiss {
+  [self removeFromSuperview];
+}
+
+#pragma mark - TapGesture Action
+
+- (void)doubleTap:(UITapGestureRecognizer *)tapGestureRecognizer {
+
 }
 
 

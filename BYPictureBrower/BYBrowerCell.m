@@ -32,6 +32,6 @@
 - (void)bindAsset:(BYAsset *)asset {
   CGFloat y = (self.bounds.size.height - asset.height) / 2;
   self.pictureView.frame = CGRectMake(0, y, asset.width, asset.height);
-  [self.pictureView setImageWithURL:[NSURL URLWithString:asset.imageUrl] placeholder:[UIImage imageWithColor:[UIColor redColor]]];
+  [self.pictureView setImageWithURL:[NSURL URLWithString:asset.imageUrl] placeholder:asset.defaultImageView.image];
 }
 @end

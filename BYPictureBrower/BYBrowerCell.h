@@ -10,6 +10,11 @@
 
 @class BYAsset;
 
+@protocol BYBrowerCellDelegate <NSObject>
+
+//- (void)pictureClick:()
+@end
+
 @interface BYBrowerCell : UICollectionViewCell
 
 - (void)bindAsset:(BYAsset *)asset;
