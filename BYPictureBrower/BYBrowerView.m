@@ -48,17 +48,17 @@
   [self.collectionView registerClass:[BYBrowerCell class] forCellWithReuseIdentifier:@"BYBrowerCell"];
   [self addSubview:self.collectionView];
   
-  UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
-  singleTap.delegate = self;
-  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
-  doubleTap.delegate = self;
-  doubleTap.numberOfTapsRequired = 2;
-  UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress)];
-  longPress.delegate = self;
-  [singleTap requireGestureRecognizerToFail: doubleTap];
-  [self addGestureRecognizer:singleTap];
-  [self addGestureRecognizer:doubleTap];
-  [self addGestureRecognizer:longPress];
+//  UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+//  singleTap.delegate = self;
+//  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+//  doubleTap.delegate = self;
+//  doubleTap.numberOfTapsRequired = 2;
+//  UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress)];
+//  longPress.delegate = self;
+//  [singleTap requireGestureRecognizerToFail: doubleTap];
+//  [self addGestureRecognizer:singleTap];
+//  [self addGestureRecognizer:doubleTap];
+//  [self addGestureRecognizer:longPress];
   
   // "1/6"
   
