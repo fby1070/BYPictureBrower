@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "BYPicture.h"
 
 @interface BYAsset : NSObject
 
@@ -17,27 +18,17 @@
 @property(nonatomic, strong) UIImageView *defaultImageView;
 
 /**
- 不需要动画
+ * 小图(placeHolder)
  */
-@property(nonatomic, copy) UIImage *defaultImage;
+@property(nonatomic, strong) BYPicture *smallImage;
 
 /**
- 图片链接(需要显示比默认图更清楚的图片URL)
+ * 中图(用于显示)
  */
-@property(nonatomic, copy) NSString *imageUrl;
+@property(nonatomic, strong) BYPicture *mediumImage;
 
 /**
- 图片的宽
+ * 大图（原图下载）
  */
-@property(nonatomic, assign) CGFloat width;
-
-/**
- 图片的高
- */
-@property(nonatomic, assign) CGFloat height;
-
-/**
- 原图节数
- */
-@property(nonatomic, copy) NSString *size;
+@property(nonatomic, strong) BYPicture *largeImage;
 @end
