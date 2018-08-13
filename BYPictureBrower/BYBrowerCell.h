@@ -12,10 +12,12 @@
 
 @protocol BYBrowerCellDelegate <NSObject>
 
-//- (void)pictureClick:()
+- (void)pictureOneClick:(UITapGestureRecognizer *)recognizer;
 @end
 
 @interface BYBrowerCell : UICollectionViewCell
+
+@property (nonatomic, weak) id<BYBrowerCellDelegate> delegate;
 
 - (void)bindAsset:(BYAsset *)asset;
 @end

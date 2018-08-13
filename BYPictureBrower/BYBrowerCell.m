@@ -34,12 +34,15 @@
   
   self.pictureView = [[UIImageView alloc] init];
   self.pictureView.userInteractionEnabled = YES;
-  [self addSubview:self.pictureView];
+  [self.scrollView addSubview:self.pictureView];
   
   UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
   doubleTap.numberOfTapsRequired = 2;
   [self.pictureView addGestureRecognizer:doubleTap];
-
+  
+  UITapGestureRecognizer *oneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(oneTap:)];
+  [self.pictureView addGestureRecognizer:oneTap];
+  [oneTap requireGestureRecognizerToFail:doubleTap];
 }
 
 - (void)doubleTap:(UITapGestureRecognizer *)recognizer {
@@ -53,37 +56,46 @@
   }
 }
 
+- (void)oneTap:(UITapGestureRecognizer *)recognizer {
+  if (self.delegate && [self.delegate respondsToSelector:@selector(pictureOneClick:)]) {
+    [self.delegate pictureOneClick:recognizer];
+  }
+}
+
 /** 计算点击点所在区域frame */
 - (CGRect)getRectWithScale:(CGFloat)scale andCenter:(CGPoint)center{
-//  CGRect newRect = CGRectZero;
-//  newRect.size.width =  _scrollView.frame.size.width/scale;
-//  newRect.size.height = _scrollView.frame.size.height/scale;
-//  newRect.origin.x = center.x - newRect.size.width * 0.5;
-//  newRect.origin.y = center.y - newRect.size.height * 0.5;
-//
-  
-  CGPoint touchPoint = center;
-  CGFloat newZoomScale = scale;
-  CGFloat xsize = self.width / newZoomScale;
-  CGFloat ysize = self.height / newZoomScale;
-  return CGRectMake(touchPoint.x - xsize/2, touchPoint.y - ysize/2, xsize, ysize);
+  CGRect newRect = CGRectZero;
+  newRect.size.width =  _scrollView.frame.size.width/scale;
+  newRect.size.height = _scrollView.frame.size.height/scale;
+  newRect.origin.x = center.x - newRect.size.width * 0.5;
+  newRect.origin.y = center.y - newRect.size.height * 0.5;
+  return newRect;
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
   return self.pictureView;
 }
 
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+  UIView *subView = self.pictureView;
+  CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width)?
+  (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
+  CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height)?
+  (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
+  subView.center = CGPointMake((scrollView.contentSize.width - 20) * 0.5 + offsetX,
+                               scrollView.contentSize.height * 0.5 + offsetY);
+}
+
 - (void)bindAsset:(BYAsset *)asset {
+  [self.scrollView setZoomScale:1 animated:NO]; 
   CGFloat y = (self.bounds.size.height - asset.height) / 2;
+
   self.pictureView.frame = CGRectMake(0, y, asset.width, asset.height);
-  [self.pictureView setImageWithURL:[NSURL URLWithString:asset.imageUrl] placeholder:asset.defaultImageView.image];
+  [self.pictureView setImageWithURL:[NSURL URLWithString:asset.imageUrl]
+                        placeholder:asset.defaultImageView.image];
   
   CGSize size = CGSizeMake(asset.width, asset.height);
   self.scrollView.contentSize = size;
-  if (size.height <  self.scrollView.bounds.size.height) {
-    CGFloat offsetY = ( self.scrollView.bounds.size.height - size.height) * 0.5;
-    
-    _scrollView.contentInset = UIEdgeInsetsMake(offsetY, 0, offsetY, 0);
-  }
+
 }
 @end

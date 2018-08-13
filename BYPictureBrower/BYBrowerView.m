@@ -11,7 +11,7 @@
 #import "BYBrowerCell.h"
 #import <YYKit/YYKit.h>
 
-@interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
+@interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, BYBrowerCellDelegate>
 
 @property (nonatomic, strong) NSArray<BYAsset *> *assetArray;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -82,6 +82,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
   BYBrowerCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"BYBrowerCell" forIndexPath:indexPath];
+  cell.delegate = self;
   BYAsset *asset = self.assetArray[indexPath.row];
   [cell bindAsset:asset];
   return cell;
@@ -122,5 +123,9 @@
     self.alpha = 1;
 //    newImageView.frame = newRect;
   }];
+}
+
+- (void)pictureOneClick:(UITapGestureRecognizer *)recognizer {
+  [self dismiss];
 }
 @end
