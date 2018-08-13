@@ -20,7 +20,7 @@
 /**
  * 小图(placeHolder)
  */
-@property(nonatomic, strong) BYPicture *smallImage;
+@property(nonatomic, strong) BYPicture *normalImage;
 
 /**
  * 中图(用于显示)
@@ -31,4 +31,8 @@
  * 大图（原图下载）
  */
 @property(nonatomic, strong) BYPicture *largeImage;
+
+- (instancetype _Nullable)initWithImageView:(UIImageView *)imageView url:(NSString *)url;
+
+- (instancetype _Nonnull)initWithUrl:(NSString *)imageUrl;
 @end

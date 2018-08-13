@@ -19,6 +19,17 @@
 
 @implementation BYBrowerView
 
+- (instancetype)initWithImageViewArray:(NSArray<UIImageView *> *)imageViewArray {
+  self = [super init];
+  if (self) {
+//    self.assetArray = assetArray;
+    self.backgroundColor = [UIColor blackColor];
+    self.alpha = 0;
+    [self initSubviews];
+  }
+  return self;
+}
+
 - (instancetype)initWithAssetArray:(NSArray<BYAsset *> *)assetArray {
   self = [super init];
   if (self) {
@@ -29,6 +40,7 @@
   }
   return self;
 }
+
 
 - (void)initSubviews {
   UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -127,5 +139,12 @@
 
 - (void)pictureOneClick:(UITapGestureRecognizer *)recognizer {
   [self dismiss];
+}
+
+- (NSArray<BYAsset *> *)dataFormat:(NSArray<UIImageView *> *)imageViewArray {
+  NSMutableArray *array = [NSMutableArray arrayWithCapacity:imageViewArray.count];
+  [imageViewArray enumerateObjectsUsingBlock:^(UIImageView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    BYAsset *asset = [[BYAsset alloc] init];
+  }];
 }
 @end

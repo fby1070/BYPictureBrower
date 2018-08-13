@@ -68,7 +68,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   BYDemoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BYDemoTableViewCell"];
-//  cell.label.text = [NSString stringWithFormat:@"%ld", indexPath.row];
   [cell bindArray:self.imageArray];
   return cell;
 }

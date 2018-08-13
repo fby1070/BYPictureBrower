@@ -15,6 +15,7 @@
 
 @property (nonatomic, assign) NSInteger index;
 
+- (instancetype)initWithImageViewArray:(NSArray<UIImageView *> *)imageViewArray;
 - (instancetype)initWithAssetArray:(NSArray<BYAsset *> *)assetArray;
 - (void)show;
 @end

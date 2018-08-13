@@ -83,14 +83,14 @@
   
   [highArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
     BYAsset *asset = assetArray[idx];
-    asset.imageUrl = obj;
+    BYPicture *pic = [[BYPicture alloc] init];
+    pic.imageUrl = obj;
+    asset.mediumImage = pic;
+    
   }];
   
   BYBrowerView *view = [[BYBrowerView alloc] initWithAssetArray:[assetArray copy]];
   
   [view show];
-//  BYBrowerView *view = [[BYBrowerView alloc] initWithImageArray:self.imageArray];
-//  view.imagesSuperView = self;
-//  [view show];
 }
 @end

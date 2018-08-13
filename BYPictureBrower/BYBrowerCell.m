@@ -87,15 +87,38 @@
 }
 
 - (void)bindAsset:(BYAsset *)asset {
-  [self.scrollView setZoomScale:1 animated:NO]; 
-  CGFloat y = (self.bounds.size.height - asset.height) / 2;
-
-  self.pictureView.frame = CGRectMake(0, y, asset.width, asset.height);
-  [self.pictureView setImageWithURL:[NSURL URLWithString:asset.imageUrl]
-                        placeholder:asset.defaultImageView.image];
+  [self.scrollView setZoomScale:1 animated:NO];
   
-  CGSize size = CGSizeMake(asset.width, asset.height);
-  self.scrollView.contentSize = size;
+  //显示主要以中图为主，若存在中图，normalImage只能当placeHolder
+  if (asset.mediumImage) {
+    CGFloat y = (self.bounds.size.height - asset.mediumImage.height) / 2;
+    if (asset.mediumImage.image) {
+      self.pictureView.frame = CGRectMake(0, y, asset.mediumImage.width, asset.mediumImage.height);
+      self.pictureView.image = asset.mediumImage.image;
+    } else if (asset.mediumImage.imageUrl.isNotBlank) {
+      __weak typeof(self) weakSelf = self;
+      [self.pictureView setImageWithURL:[NSURL URLWithString:asset.mediumImage.imageUrl] placeholder:asset.normalImage.image options:YYWebImageOptionProgressiveBlur completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+        if (error) {
+          //提示图片下载错误
+          return;
+        }
+        if (stage == YYWebImageStageFinished) {
+          __strong typeof(weakSelf) strongSelf = weakSelf;
+          if (strongSelf) {
+            strongSelf.pictureView.image = image;
+            strongSelf.pictureView.frame = CGRectMake(0, y, image.size.width, image.size.height);
+          }
+        }
+      }];
+    }
+  } else {
+    if (!asset.normalImage.image)return;
+    self.pictureView.image = asset.normalImage.image;
+    CGFloat y = (self.bounds.size.height - asset.normalImage.height) / 2;
+    self.pictureView.frame = CGRectMake(0, y, asset.normalImage.width, asset.normalImage.height);
+  }
+  CGSize scrollViewSize = CGSizeMake(self.pictureView.frame.size.width, self.pictureView.frame.size.height);
+  self.scrollView.contentSize = scrollViewSize;
 
 }
 @end
