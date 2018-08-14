@@ -22,7 +22,7 @@
 - (instancetype)initWithImageViewArray:(NSArray<UIImageView *> *)imageViewArray {
   self = [super init];
   if (self) {
-//    self.assetArray = assetArray;
+    self.assetArray = [self dataFormat:imageViewArray];
     self.backgroundColor = [UIColor blackColor];
     self.alpha = 0;
     [self initSubviews];
@@ -60,18 +60,6 @@
   [self.collectionView registerClass:[BYBrowerCell class] forCellWithReuseIdentifier:@"BYBrowerCell"];
   [self addSubview:self.collectionView];
   
-//  UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
-//  singleTap.delegate = self;
-//  UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
-//  doubleTap.delegate = self;
-//  doubleTap.numberOfTapsRequired = 2;
-//  UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress)];
-//  longPress.delegate = self;
-//  [singleTap requireGestureRecognizerToFail: doubleTap];
-//  [self addGestureRecognizer:singleTap];
-//  [self addGestureRecognizer:doubleTap];
-//  [self addGestureRecognizer:longPress];
-  
   // "1/6"
   
   //保存图片按钮
@@ -104,18 +92,12 @@
   [self removeFromSuperview];
 }
 
-#pragma mark - TapGesture Action
-
-- (void)doubleTap:(UITapGestureRecognizer *)tapGestureRecognizer {
-
-}
-
-
 - (void)show {
   UIWindow *window = [UIApplication sharedApplication].keyWindow;
   self.frame = window.bounds;
   [window addSubview:self];
   [self.collectionView reloadData];
+  
 //  CGRect rect = [self.baseView convertRect:self.baseView.bounds toView:window.maskView];
 //
 //  UIImageView *imageView = (UIImageView *)self.baseView;
@@ -137,14 +119,57 @@
   }];
 }
 
+- (void)showWithIndex:(NSUInteger)index {
+  UIWindow *window = [UIApplication sharedApplication].keyWindow;
+  self.frame = window.bounds;
+  [window addSubview:self];
+
+  BYAsset *selectedAsset = [self.assetArray objectOrNilAtIndex:index];
+  CGRect currentRect = CGRectZero;
+  
+  UIImageView *currentImageView = [[UIImageView alloc] init];
+  if (selectedAsset) {
+    currentRect = selectedAsset.rect;
+    currentImageView.frame = currentRect;
+    currentImageView.image = selectedAsset.normalImage.image;
+    currentImageView.contentMode = selectedAsset.defaultImageView.contentMode;
+    [self addSubview:currentImageView];
+    CGFloat h = (self.bounds.size.width / selectedAsset.normalImage.image.size.width) * selectedAsset.normalImage.image.size.height;
+    CGFloat y = (self.frame.size.height - h) / 2;
+    CGRect newRect = CGRectMake(0, y, self.bounds.size.width, h);
+    
+    [UIView animateWithDuration:0.5 animations:^{
+      self.alpha = 1;
+      currentImageView.frame = newRect;
+    } completion:^(BOOL finished) {
+      [self.collectionView reloadData];
+      currentImageView.hidden = YES;
+    }];
+  } else {
+    
+  }
+  
+
+  
+}
+
 - (void)pictureOneClick:(UITapGestureRecognizer *)recognizer {
   [self dismiss];
 }
 
 - (NSArray<BYAsset *> *)dataFormat:(NSArray<UIImageView *> *)imageViewArray {
   NSMutableArray *array = [NSMutableArray arrayWithCapacity:imageViewArray.count];
+  UIWindow *window = [UIApplication sharedApplication].keyWindow;
   [imageViewArray enumerateObjectsUsingBlock:^(UIImageView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
     BYAsset *asset = [[BYAsset alloc] init];
+    CGRect rect = [obj convertRect:obj.bounds toView:window.maskView];
+    asset.defaultImageView = obj;
+    asset.rect = rect;
+    BYPicture *pic = [[BYPicture alloc] init];
+    pic.image = obj.image;
+    asset.normalImage = pic;
+    [array addObject:asset];
   }];
+  return [array copy];
 }
 @end

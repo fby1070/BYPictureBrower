@@ -12,18 +12,18 @@
 @implementation BYPicture
 
 - (NSInteger)width {
-  if (self.width == 0) {
+  if (_width == 0) {
     if (self.image.size.width > kScreenWidth) {
       return kScreenWidth;
     } else {
       return self.image.size.width;
     }
   }
-  return self.width;
+  return _width;
 }
 
 - (NSInteger)height {
-  if (self.height == 0) {
+  if (_height == 0) {
     if (self.image.size.width > kScreenWidth) {
       CGFloat h = (kScreenWidth / self.image.size.width) * self.image.size.height;
       return h;
@@ -31,6 +31,6 @@
       return self.image.size.height;
     }
   }
-  return self.height;
+  return _height;
 }
 @end

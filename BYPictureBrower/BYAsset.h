@@ -18,6 +18,11 @@
 @property(nonatomic, strong) UIImageView *defaultImageView;
 
 /**
+ rect
+ */
+@property(nonatomic, assign) CGRect rect;
+
+/**
  * 小图(placeHolder)
  */
 @property(nonatomic, strong) BYPicture *normalImage;

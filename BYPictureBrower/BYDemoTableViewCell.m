@@ -89,8 +89,12 @@
     
   }];
   
-  BYBrowerView *view = [[BYBrowerView alloc] initWithAssetArray:[assetArray copy]];
+//  BYBrowerView *view = [[BYBrowerView alloc] initWithAssetArray:[assetArray copy]];
+
+
+  BYBrowerView *view = [[BYBrowerView alloc] initWithImageViewArray:self.imageViewArray];
   
-  [view show];
+//  [view show];
+  [view showWithIndex:0];
 }
 @end
