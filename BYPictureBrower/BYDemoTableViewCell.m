@@ -46,6 +46,7 @@
   NSMutableArray *imageViewArray = [NSMutableArray arrayWithCapacity:imageArray.count];
   [imageArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
     UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.tag = idx;
     CGFloat x = 10 + idx * 70;
     CGFloat y = 10;
     if (x > kScreenWidth) {
@@ -95,6 +96,6 @@
   BYBrowerView *view = [[BYBrowerView alloc] initWithImageViewArray:self.imageViewArray];
   
 //  [view show];
-  [view showWithIndex:0];
+  [view showWithIndex:tapGestureRecognizer.view.tag];
 }
 @end

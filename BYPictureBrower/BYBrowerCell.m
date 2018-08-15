@@ -10,10 +10,14 @@
 #import <YYKit/YYKit.h>
 #import "BYAsset.h"
 
-@interface BYBrowerCell ()<UIScrollViewDelegate>
+@interface BYBrowerCell ()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIImageView *pictureView;
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, assign) CGPoint point;
+@property (nonatomic, assign) CGPoint beginPoint;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+
 @end
 
 @implementation BYBrowerCell
@@ -31,18 +35,22 @@
   self.scrollView.minimumZoomScale = 1.0;
   self.scrollView.delegate = self;
   [self addSubview:_scrollView];
+  self.point = self.scrollView.center;
   
   self.pictureView = [[UIImageView alloc] init];
-  self.pictureView.userInteractionEnabled = YES;
   [self.scrollView addSubview:self.pictureView];
   
   UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
   doubleTap.numberOfTapsRequired = 2;
-  [self.pictureView addGestureRecognizer:doubleTap];
+  [self.scrollView addGestureRecognizer:doubleTap];
   
   UITapGestureRecognizer *oneTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(oneTap:)];
-  [self.pictureView addGestureRecognizer:oneTap];
+  [self.scrollView addGestureRecognizer:oneTap];
   [oneTap requireGestureRecognizerToFail:doubleTap];
+  
+  self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panView:)];
+  self.panGestureRecognizer.delegate = self;
+  [self.scrollView addGestureRecognizer:self.panGestureRecognizer];
 }
 
 - (void)doubleTap:(UITapGestureRecognizer *)recognizer {
@@ -69,6 +77,7 @@
   newRect.size.height = _scrollView.frame.size.height/scale;
   newRect.origin.x = center.x - newRect.size.width * 0.5;
   newRect.origin.y = center.y - newRect.size.height * 0.5;
+  
   return newRect;
 }
 
@@ -120,5 +129,52 @@
   CGSize scrollViewSize = CGSizeMake(self.pictureView.frame.size.width, self.pictureView.frame.size.height);
   self.scrollView.contentSize = scrollViewSize;
 
+}
+
+- (void) panView:(UIPanGestureRecognizer *)panGestureRecognizer {
+  UIView *view = panGestureRecognizer.view;
+  if (panGestureRecognizer.state == UIGestureRecognizerStateBegan || panGestureRecognizer.state == UIGestureRecognizerStateChanged){
+    CGPoint translation = [panGestureRecognizer translationInView:view.superview];
+    [view setCenter:(CGPoint){view.center.x + translation.x, view.center.y + translation.y}];
+    [panGestureRecognizer setTranslation:CGPointZero inView:view.superview];
+  }
+  if (panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+    [UIView animateWithDuration:0.3 animations:^{
+      [view setCenter:(CGPoint){self.point.x, self.point.y} ];
+
+    }];
+  }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+  if (gestureRecognizer) {
+    //记录刚接触时的坐标
+    self.beginPoint = [touch locationInView:self.window];
+  }
+  return YES;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+  //判断是否是左右滑动  滑动区间设置为+-10
+  CGPoint touchPoint = [gestureRecognizer locationInView:self.window];
+  CGFloat dirTop = self.beginPoint.y - touchPoint.y;
+  if (dirTop > -10 && dirTop < 10) {
+    self.scrollView.panGestureRecognizer.enabled = YES;
+    self.panGestureRecognizer.enabled = NO;
+    return NO;
+  } else {
+    return YES;
+  }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+  self.panGestureRecognizer.enabled = YES;
+}
+- (void)setupGesture {
+  self.panGestureRecognizer.enabled = YES;
 }
 @end

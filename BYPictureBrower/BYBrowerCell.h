@@ -20,4 +20,6 @@
 @property (nonatomic, weak) id<BYBrowerCellDelegate> delegate;
 
 - (void)bindAsset:(BYAsset *)asset;
+
+- (void)setupGesture;
 @end

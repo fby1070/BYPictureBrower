@@ -11,10 +11,18 @@
 #import "BYBrowerCell.h"
 #import <YYKit/YYKit.h>
 
-@interface BYBrowerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, BYBrowerCellDelegate>
+#define kBYWidth (kScreenWidth + 20)
+
+@interface BYBrowerView ()
+<UICollectionViewDelegate,
+UICollectionViewDataSource,
+UICollectionViewDelegateFlowLayout,
+UIScrollViewDelegate,
+BYBrowerCellDelegate>
 
 @property (nonatomic, strong) NSArray<BYAsset *> *assetArray;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, assign) NSInteger selectedIndex;
 @end
 
 @implementation BYBrowerView
@@ -70,6 +78,7 @@
 - (void)layoutSubviews {
   [super layoutSubviews];
   self.collectionView.frame = CGRectMake(0, 0, self.bounds.size.width + 20, self.bounds.size.height);
+  self.collectionView.contentOffset = CGPointMake(self.selectedIndex * kBYWidth, 0);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -77,7 +86,7 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-  return CGSizeMake(kScreenWidth + 20, kScreenHeight);
+  return CGSizeMake(kBYWidth, kScreenHeight);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -123,7 +132,8 @@
   UIWindow *window = [UIApplication sharedApplication].keyWindow;
   self.frame = window.bounds;
   [window addSubview:self];
-
+  self.selectedIndex = index;
+  self.collectionView.hidden = YES;
   BYAsset *selectedAsset = [self.assetArray objectOrNilAtIndex:index];
   CGRect currentRect = CGRectZero;
   
@@ -138,19 +148,16 @@
     CGFloat y = (self.frame.size.height - h) / 2;
     CGRect newRect = CGRectMake(0, y, self.bounds.size.width, h);
     
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
       self.alpha = 1;
       currentImageView.frame = newRect;
     } completion:^(BOOL finished) {
-      [self.collectionView reloadData];
+      self.collectionView.hidden = NO;
       currentImageView.hidden = YES;
     }];
   } else {
     
   }
-  
-
-  
 }
 
 - (void)pictureOneClick:(UITapGestureRecognizer *)recognizer {
@@ -166,10 +173,20 @@
     asset.defaultImageView = obj;
     asset.rect = rect;
     BYPicture *pic = [[BYPicture alloc] init];
+
     pic.image = obj.image;
+    pic.width = kScreenWidth;
+    CGFloat h = (kScreenWidth / obj.image.size.width) * obj.image.size.height;
+    pic.height = h;
     asset.normalImage = pic;
     [array addObject:asset];
   }];
   return [array copy];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+  NSInteger index = (NSInteger)scrollView.contentOffset.x / (NSInteger)[UIScreen mainScreen].bounds.size.width;
+  BYBrowerCell *cell = (BYBrowerCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+  [cell setupGesture];
 }
 @end
