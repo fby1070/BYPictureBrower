@@ -57,6 +57,10 @@
   if (self.scrollView.zoomScale > 1.0) {
     [self.scrollView setZoomScale:1.0 animated:YES];
   } else {
+    
+    if (self.pictureView.frame.origin.y > 0) {
+      self.panGestureRecognizer.enabled = NO;
+    }
     CGPoint touchPoint = [recognizer locationInView:self.pictureView];
     CGFloat scale = self.scrollView.maximumZoomScale;
     CGRect newRect = [self getRectWithScale:scale andCenter:touchPoint];
@@ -65,8 +69,10 @@
 }
 
 - (void)oneTap:(UITapGestureRecognizer *)recognizer {
-  if (self.delegate && [self.delegate respondsToSelector:@selector(pictureOneClick:)]) {
-    [self.delegate pictureOneClick:recognizer];
+  if (self.delegate && [self.delegate respondsToSelector:@selector(dismissWithRect:cell:)]) {
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    CGRect rect = [self.pictureView convertRect:self.pictureView.bounds toView:window.maskView];
+    [self.delegate dismissWithRect:rect cell:self];
   }
 }
 
@@ -139,17 +145,29 @@
     [panGestureRecognizer setTranslation:CGPointZero inView:view.superview];
   }
   if (panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
-    [UIView animateWithDuration:0.3 animations:^{
-      [view setCenter:(CGPoint){self.point.x, self.point.y} ];
-
-    }];
+    CGPoint point = [panGestureRecognizer velocityInView:view.superview];
+    
+    NSLog(@"%@", NSStringFromCGPoint(point));
+    if (point.y > 400) { //关闭
+      if (self.delegate && [self.delegate respondsToSelector:@selector(dismissWithRect:cell:)]) {
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        CGRect rect = [self.pictureView convertRect:self.pictureView.bounds toView:window.maskView];
+        [self.delegate dismissWithRect:rect cell:self];
+      }
+    } else {
+      [UIView animateWithDuration:0.3 animations:^{
+        [view setCenter:(CGPoint){self.point.x, self.point.y} ];
+        
+      }];
+    }
   }
 }
 
+
+
 #pragma mark - UIGestureRecognizerDelegate
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
   if (gestureRecognizer) {
     //记录刚接触时的坐标
     self.beginPoint = [touch locationInView:self.window];
@@ -166,13 +184,22 @@
     self.scrollView.panGestureRecognizer.enabled = YES;
     self.panGestureRecognizer.enabled = NO;
     return NO;
-  } else {
-    return YES;
   }
+  
+  // 判断如果是滑动手势禁用滑动上滑手势
+  if (dirTop > 10 && gestureRecognizer == self.panGestureRecognizer) {
+    return NO;
+  }
+  return YES;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-  self.panGestureRecognizer.enabled = YES;
+  if (self.pictureView.frame.origin.y >0) {
+    self.panGestureRecognizer.enabled = NO;
+  } else {
+    self.panGestureRecognizer.enabled = YES;
+  }
+  
 }
 - (void)setupGesture {
   self.panGestureRecognizer.enabled = YES;

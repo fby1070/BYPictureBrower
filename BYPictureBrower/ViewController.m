@@ -42,20 +42,6 @@
   [self.tableView registerClass:[BYDemoTableViewCell class] forCellReuseIdentifier:@"BYDemoTableViewCell"];
   [self.view addSubview:self.tableView];
   
-  
-  //拖动
-//  UIImageView *imageView = [[UIImageView alloc] init];
-//  UIImage *image = [UIImage imageNamed:@"1"];
-//  CGFloat h = (self.view.bounds.size.width / image.size.width) * image.size.height;
-//  imageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, h);
-//  imageView.image = [UIImage imageNamed:@"1"];
-//  imageView.userInteractionEnabled = YES;
-//  [self.view addSubview:imageView];
-//  self.point = imageView.center;
-//  UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panView:)];
-//  [imageView addGestureRecognizer:panGestureRecognizer];
-
-  
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -74,7 +60,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   CGRect rectInTableView = [tableView rectForRowAtIndexPath:indexPath];
-//  CGRect rect = [tableView convertRect:rectInTableView toView:[tableView superview]];
   CGRect rect = [tableView convertRect:rectInTableView toView:[UIApplication sharedApplication].keyWindow.maskView];
   NSLog(@"%@",NSStringFromCGRect(rect));
 }

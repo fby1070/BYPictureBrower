@@ -159,9 +159,31 @@ BYBrowerCellDelegate>
     
   }
 }
+- (void)dismissWithRect:(CGRect)rect cell:(BYBrowerCell *)cell {
+//  [self dismiss];
+  [self dismissAnimationWithRect:rect cell:cell];
+}
 
-- (void)pictureOneClick:(UITapGestureRecognizer *)recognizer {
-  [self dismiss];
+- (void)dismissAnimationWithRect:(CGRect)rect cell:(BYBrowerCell *)cell {
+  NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+  NSInteger index = indexPath.row;
+  
+  BYAsset *asset = [self.assetArray objectOrNilAtIndex:index];
+  if (asset.defaultImageView) {
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
+    imageView.image = asset.defaultImageView.image;
+    [self addSubview:imageView];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    CGRect defaultRect = [asset.defaultImageView convertRect:asset.defaultImageView.bounds toView:window.maskView];
+    self.collectionView.hidden = YES;
+    [UIView animateWithDuration:0.4 animations:^{
+      self.backgroundColor = [UIColor clearColor];
+      imageView.frame = defaultRect;
+    } completion:^(BOOL finished) {
+      imageView.hidden = YES;
+      [self removeFromSuperview];
+    }];
+  }
 }
 
 - (NSArray<BYAsset *> *)dataFormat:(NSArray<UIImageView *> *)imageViewArray {

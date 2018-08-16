@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @class BYAsset;
+@class BYBrowerCell;
 
 @protocol BYBrowerCellDelegate <NSObject>
 
-- (void)pictureOneClick:(UITapGestureRecognizer *)recognizer;
+- (void)dismissWithRect:(CGRect)rect cell:(BYBrowerCell *)cell;
 @end
 
 @interface BYBrowerCell : UICollectionViewCell
