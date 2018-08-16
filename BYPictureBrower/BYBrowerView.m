@@ -160,7 +160,6 @@ BYBrowerCellDelegate>
   }
 }
 - (void)dismissWithRect:(CGRect)rect cell:(BYBrowerCell *)cell {
-//  [self dismiss];
   [self dismissAnimationWithRect:rect cell:cell];
 }
 

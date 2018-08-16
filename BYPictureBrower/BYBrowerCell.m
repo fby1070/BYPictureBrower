@@ -57,10 +57,6 @@
   if (self.scrollView.zoomScale > 1.0) {
     [self.scrollView setZoomScale:1.0 animated:YES];
   } else {
-    
-    if (self.pictureView.frame.origin.y > 0) {
-      self.panGestureRecognizer.enabled = NO;
-    }
     CGPoint touchPoint = [recognizer locationInView:self.pictureView];
     CGFloat scale = self.scrollView.maximumZoomScale;
     CGRect newRect = [self getRectWithScale:scale andCenter:touchPoint];
@@ -99,6 +95,10 @@
   (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
   subView.center = CGPointMake((scrollView.contentSize.width - 20) * 0.5 + offsetX,
                                scrollView.contentSize.height * 0.5 + offsetY);
+  
+  if (self.scrollView.contentOffset.y > 0) {
+    self.panGestureRecognizer.enabled = NO;
+  }
 }
 
 - (void)bindAsset:(BYAsset *)asset {
@@ -146,8 +146,6 @@
   }
   if (panGestureRecognizer.state == UIGestureRecognizerStateEnded) {
     CGPoint point = [panGestureRecognizer velocityInView:view.superview];
-    
-    NSLog(@"%@", NSStringFromCGPoint(point));
     if (point.y > 400) { //关闭
       if (self.delegate && [self.delegate respondsToSelector:@selector(dismissWithRect:cell:)]) {
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -194,7 +192,7 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-  if (self.pictureView.frame.origin.y >0) {
+  if (self.scrollView.contentOffset.y > 0) {
     self.panGestureRecognizer.enabled = NO;
   } else {
     self.panGestureRecognizer.enabled = YES;

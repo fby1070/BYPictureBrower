@@ -19,6 +19,10 @@
 
 @implementation ViewController
 
+//1.图片清晰度
+//2.加载动画
+//3.长图，和gif
+//4.UI， label ，下载
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.imageArray = @[@"http://ww2.sinaimg.cn/thumbnail/904c2a35jw1emu3ec7kf8j20c10epjsn.jpg",
